@@ -2,38 +2,67 @@
 #define LISTLINKEDAOC8_H
 
 #include <ostream>
-#include "NodeAoC8.h"
 
+template <typename T>
 class ListLinkedAoC8 {
-	private: 
-		NodeAoC8 *first; // Primer nodo de la lista
+	private:
+		Node<T> *first; // Puntero al primero de la lista
 		int sz; // Tamaño de la lista
-	
+
 	public:
 		// Constructor
-		ListLinkedAoC8() {
-			first = nullptr;
+		ListLinked() {
+			first = nullptr; // No hay un primero al que apuntar
 			sz = 0;
 		}
 
 		// Destructor
-		~ListLinkedAoC8() {
-			while(first != nullptr) {
-				NodeAoC8 *aux = first;
-				first = first->next;
-				delete aux;
+		~ListLinked() {
+			 while(first != nullptr) {
+        			Node<T> *aux = first;
+        			first = first->next;
+        			delete aux;
+    				}
+		}
+
+		friend std::ostream& operator<<(std::ostream &out, const ListLinked<T> &list) {
+			out << "[";
+			// Creo un auxiliar
+			Node<T> *aux = list.first;
+			// Creo un bucle que vaya pasando por todos los datos de la lista
+			while(aux != nullptr) {
+				out << aux->data;
+				if(aux->next != nullptr) {
+					out << ", ";
+				}
+				aux = aux->next;
 			}
+			out << "]";
+			return out;
 		}
 
-		// Método de inserción a la lista
-		// El orden da igual en este caso
-		void insert(int x, int y, int z) {
-			// Como da igual el orden lo coloco siempre el primero y ya está
-			first = new NodeAoC8(x, y, z, first);
-			sz++;	
+		void insert(int pos, T e) {
+			// Manejo de posiciones
+                        if(pos < 0 || pos > sz) throw std::out_of_range("Posición inválida");
+			// Si lo quiero colocar primero
+			if(pos == 0) {
+				first = new Node<T>(e,first);
+			} else {
+				// Creo un auxiliar que apunte donde el primero
+				Node<T> *aux = first;
+				// Lo llevo a la posición
+				for(int i = 0; i < pos-1; i++) {
+					aux = aux->next;
+				}
+				// Aux->next apuntará al nuevo nodo que
+				// apunta a su vez a donde marcaba antes aux->next
+				aux->next = new Node<T>(e,aux->next);
+			}
+			// Incremento el tamaño
+			sz++;
 		}
 
-		int size() {
+		int getSize() {
 			return sz;
 		}
 };
