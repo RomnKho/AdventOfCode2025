@@ -6,29 +6,29 @@
 template <typename T>
 class ListLinkedAoC8 {
 	private:
-		Node<T> *first; // Puntero al primero de la lista
+		NodeAoC8<T> *first; // Puntero al primero de la lista
 		int sz; // Tamaño de la lista
 
 	public:
 		// Constructor
-		ListLinked() {
+		ListLinkedAoC8() {
 			first = nullptr; // No hay un primero al que apuntar
 			sz = 0;
 		}
 
 		// Destructor
-		~ListLinked() {
+		~ListLinkedAoC8() {
 			 while(first != nullptr) {
-        			Node<T> *aux = first;
+        			NodeAoC8<T> *aux = first;
         			first = first->next;
         			delete aux;
     				}
 		}
 
-		friend std::ostream& operator<<(std::ostream &out, const ListLinked<T> &list) {
+		friend std::ostream& operator<<(std::ostream &out, const ListLinkedAoC8<T> &list) {
 			out << "[";
 			// Creo un auxiliar
-			Node<T> *aux = list.first;
+			NodeAoC8<T> *aux = list.first;
 			// Creo un bucle que vaya pasando por todos los datos de la lista
 			while(aux != nullptr) {
 				out << aux->data;
@@ -46,10 +46,10 @@ class ListLinkedAoC8 {
                         if(pos < 0 || pos > sz) throw std::out_of_range("Posición inválida");
 			// Si lo quiero colocar primero
 			if(pos == 0) {
-				first = new Node<T>(e,first);
+				first = new NodeAoC8<T>(e,first);
 			} else {
 				// Creo un auxiliar que apunte donde el primero
-				Node<T> *aux = first;
+				NodeAoC8<T> *aux = first;
 				// Lo llevo a la posición
 				for(int i = 0; i < pos-1; i++) {
 					aux = aux->next;
