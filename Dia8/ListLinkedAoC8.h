@@ -25,6 +25,7 @@ class ListLinkedAoC8 {
     				}
 		}
 
+		// Sobrecarga del operador
 		friend std::ostream& operator<<(std::ostream &out, const ListLinkedAoC8<T> &list) {
 			out << "[";
 			// Creo un auxiliar
@@ -41,6 +42,7 @@ class ListLinkedAoC8 {
 			return out;
 		}
 
+		// Método de inserción en la lista
 		void insert(int pos, T e) {
 			// Manejo de posiciones
                         if(pos < 0 || pos > sz) throw std::out_of_range("Posición inválida");
@@ -61,6 +63,22 @@ class ListLinkedAoC8 {
 			// Incremento el tamaño
 			sz++;
 		}
+
+		// Método de búsqueda dentro de la lista
+		int search(T e) override {
+			// Creo un auxiliar
+			Node<T> *aux = first;
+			int pos = 0;
+			// Bucle para encontrar el elemento
+			while(aux != nullptr) {
+				if( e == aux->data) return pos; // Se encontró con el elemento
+				aux = aux->next;
+				pos++;
+			}
+			// No se encontró el elemento
+			return -1;
+		}
+
 
 		int getSize() {
 			return sz;
