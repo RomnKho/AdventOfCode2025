@@ -26,8 +26,11 @@ long long calcularArea(std::vector<std::array<long long,2>> &vCoords, int i, int
 	}
 
 	// Se calcula el area
-	long long coordsX = std::abs(vCoords[i][0] - vCoords[j][0]);
-	long long coordsY = std::abs(vCoords[i][1] - vCoords[j][1]);
+	// Se suma 1 ya son casillas
+	// Ej. (4, 2) (3,1)
+	// 4 - 3 = 1 pero hay dos casillas entre el 4 y el 3 (contandolos)
+	long long coordsX = std::abs(vCoords[i][0] - vCoords[j][0]) + 1;
+	long long coordsY = std::abs(vCoords[i][1] - vCoords[j][1]) + 1;
 	long long area = coordsX * coordsY;
 
 	// Se guarda en la memoria
@@ -53,7 +56,7 @@ long long maxArea(std::vector<std::array<long long,2>> &vCoords, int ini, int fi
 	}
 }
 
-std::vector<std::array<long long, 2>> leer(std::string nombre){
+std::vector<std::array<long long, 2>> leer(std::string nombre) {
     std::vector<std::array<long long,2>> coordenadas;
     std::array<long long,2> a;
     std::ifstream archivo (nombre);
