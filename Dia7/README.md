@@ -29,7 +29,7 @@ Función que lee el archivo de texto que se le porporciona y coloca la informaci
 long long contar_splits(const vector<string>& mapa);
 ```
 
-Función que cuenta los splits totales en la última fila. Primero se encuentra la S ("la estrella del arbol") que determina la columna inicial donde van a iniciar los splits. En el caso de que no se enceuntre la S la función retornará 0 significando que no se pudo iniciar el conteo de splits.
+Función que cuenta los splits totales en la última fila. Primero se encuentra la S ("la estrella del arbol") que determina la columna inicial donde van a iniciar los splits. En el caso de que no se encuentre la S la función retornará 0 significando que no se pudo iniciar el conteo de splits.
 ```cpp
 int columnaInicial = -1;
 
@@ -51,21 +51,21 @@ unordered_set<pair<int,int>, PairHash> activas;
 Ejemplo de lo que se guardaría en activas:
 ```
 ......S.......
-.....|.|......
+......|.......
 .....|^|......   <= Guarda las posiciones de |
 ```
 y otro map que guardará las posiciones de splitters ya visitados. Para poder diferenciar el hecho de que en una misma línea pueden haber más de un un split.
 ```cpp
 unordered_set<pair<int,int>, PairHash> splitters_visitados;
 ```
-Así, luego se crea un bucle que va a ir recorriendo el mapa. Aquí se crea un auxilir llamado next.
+Así, luego se crea un bucle que va a ir recorriendo el mapa. Aquí se crea un auxiliar llamado next.
 ```cpp
 unordered_set<pair<int,int>, PairHash> next;
 ```
 que servirá para colocar los splits siguientes a activos, es decir,
 ```
 ......S.......
-.....|.|......
+......|.......
 .....|^|......   <= Esto es activas
 .....|.|......   <= Esto es next
 ```
