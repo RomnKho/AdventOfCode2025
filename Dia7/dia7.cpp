@@ -72,33 +72,33 @@ long long contar_splits(const vector<string>& mapa) {
 
         for (size_t i = 0; i < activas_vec.size(); i++) {
             pair<int,int> pos = activas_vec[i];
-            int r = pos.first;
+            int l = pos.first;
             int c = pos.second;
 
-            if (r >= L) continue; // nos salimos del mapa
+            if (l >= L) continue; // nos salimos del mapa
 
-            char celda = mapa[r][c];
+            char celda = mapa[l][c];
 
             if (celda == '.') {
                 // Avanzar recto
-                if (r + 1 < L)
-                    next.insert({r + 1, c});
+                if (l + 1 < L)
+                    next.insert({l + 1, c});
             }
             else if (celda == '^') {
                 // Solo contar si no lo hemos visitado antes
-                if (!splitters_visitados.count({r, c})) {
-                    splitters_visitados.insert({r, c});
+                if (!splitters_visitados.count({l, c})) {
+                    splitters_visitados.insert({l, c});
                     totalSplits++;
 
-                    int nr = r + 1;
-                    if (nr < L) {
+                    int nl = l + 1;
+                    if (nl < L) {
                         if (c - 1 >= 0){
                             // diagonal izquierdo
-                            next.insert({nr, c - 1});
+                            next.insert({nl, c - 1});
                         } 
                         if (c + 1 < C){
                             // diagonal derecho
-                            next.insert({nr, c + 1});
+                            next.insert({nl, c + 1});
                          } 
                     }
                 }
