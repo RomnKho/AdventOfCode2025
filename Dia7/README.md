@@ -29,7 +29,7 @@ Función que lee el archivo de texto que se le porporciona y coloca la informaci
 long long contar_splits(const vector<string>& mapa);
 ```
 
-Función que cuenta los splits totales en la última fila. Primero se encuentra la S (la estrella del arbol") que determina la columna inicial donde van a iniciar los splits. Luego se crea un mapa hash con las posiciones en donde irán todas las posiciones posteriores a un split (activas) 
+Función que cuenta los splits totales en la última fila. Primero se encuentra la S ("la estrella del arbol") que determina la columna inicial donde van a iniciar los splits. Luego se crea un mapa hash con las posiciones en donde irán todas las posiciones posteriores a un split (activas) 
 ```cpp 
 unordered_set<pair<int,int>, PairHash> activas;
 ```
