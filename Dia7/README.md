@@ -17,7 +17,7 @@ Estructura para crear la tabla hash
 size_t operator()(const pair<int,int>& p) const;
 ```
 
-Función que devuelve la clave de la hash a partir de los integers que se proporciona en el par. Ejemplo: pair<23, 19> saldria 2319 como clave.
+Función que devuelve la clave de la hash a partir de los integers que se proporciona en el par. Ejemplo: pair<2, 19> saldria 2019 como clave.
 
 ```cpp
 void LeerInput(const string& archivo, vector<string>& mapa);
