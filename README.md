@@ -4,9 +4,8 @@
 ### **ADVENT OF CODE 2025**
 
 Grupo formado por:
-
-    - Román Khomenko Khomenko
-    - David Pérez Simón
-    - Alejandro Baños Hernández
+- Román Khomenko Khomenko
+- David Pérez Simón
+- Alejandro Baños Hernández
 
 
