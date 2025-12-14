@@ -106,3 +106,9 @@ Ya para finalizar activas pasa a ser next y se vuelve a realizar el bucle hasta 
 ```cpp
 if (l >= L) continue;
 ```
+
+Devuelve el numero de splits en la última fila
+
+```cpp
+return totalSplits;
+```
