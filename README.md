@@ -9,7 +9,7 @@
 - Alejandro Baños Hernández
 
 #### Días a entregar:
-- Día 4 => Árbol binario de búsqueda
-- Día 5 => Grafos
+- Día 4 => Grafos
+- Día 5 => Árbol binario de búsqueda
 - Día 7 => Tabla Hash
 - Día 9 => Programación dinámica
