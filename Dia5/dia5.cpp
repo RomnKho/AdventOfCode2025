@@ -51,6 +51,15 @@ class Tree {
 
                 // Bucle para colocar auxCoords donde debe
                 while(true) {
+                    // Si el rango del que queremos insertar es más grande que el anterior
+                    // lo fusionamos
+                    // Ej. rango a insertar (15-25) | rango anterior (17-20)
+                    // Pasa a ser (15-25)
+                    if(auxRange->range[0] <= aux->range[0] && auxRange->range[1] >= aux->range[1]) {
+                        aux->range = auxRange->range;
+                        break;
+                    }
+
                     // Si el primer elemento del rango es menor al anterior
                     if(auxRange->range[0] <= aux->range[0]) {
                         // Si hay nodo a la izquierda seguimos recorriendo
@@ -84,7 +93,6 @@ class Tree {
         bool checkFreshness(long long id) {
             // Creo un nodo auxiliar para recorrer el arbol
             Node *aux = root;
-            long long countFreshness;
 
             while(aux != nullptr) {
                 // Mirar si el id se encuentra dentro del rango de alguno de los que nos han dado
@@ -92,8 +100,7 @@ class Tree {
                     if(id > aux->range[1]) {
                         aux = aux->right;
                     } else {
-                        std::cout << id << " en rango " << aux->range[0] << "-" << aux->range[1] << std::endl;
-                        countFreshness++;
+                        // std::cout << id << " en rango " << aux->range[0] << "-" << aux->range[1] << std::endl;
                         return true;
                     }
                 } else {
@@ -101,7 +108,7 @@ class Tree {
                 }
             }
 
-            std::cout << id << " no está en ningún rango" << std::endl;
+            // std::cout << id << " no está en ningún rango" << std::endl;
             return false; // No se ha encontrado
         }
 };
