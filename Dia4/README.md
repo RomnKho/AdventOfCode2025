@@ -1,4 +1,10 @@
-===== DÍA 4 ====
+## DÍA 4
 
-/* Grafos */ 
+### GRAFOS
+- e 
+- e
+- e
+- e
+
+### EXPLICACIÓN FUNCIONES USADAS
 
