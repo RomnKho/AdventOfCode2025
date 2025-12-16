@@ -3,15 +3,15 @@
 ### ÁRBOLES BINARIO DE BÚSQUEDA
 - Hemos elegido este problema ya que es el único que hemos visto en el que se puede implementar esta estructura de datos sin que se complica mucho el problema
 - Se ha necesitado crear desde 0 la estructura de los nodos ya que se necesitaba controlar la inserción de los rangos (cosa que no nos permite por ejemplo std::set o std::map). Así, podíamos ver, por ejemplo, el solapamiento de rangos.
-- Hemos intentado impplementar este problema con tablas hash pero al ver que era el único que veíamos claro hacer con árbol hemos optado hacerlo con esta estructura de datos.
-- Se ha aprendido a crear un arbol desde cero, implementando métodos propios necesarios además de reforzar nuestro aprendizaje sobre los punteros y su inserción y su recorrido.
+- Hemos intentado implementar este problema con tablas hash pero al ver que era el único que veíamos claro hacer con árbol hemos optado hacerlo con esta estructura de datos.
+- Se ha aprendido a crear un arbol desde cero, implementando métodos propios necesarios además de reforzar nuestro aprendizaje sobre los punteros, su inserción y su recorrido.
 
 ### EXPLICACIÓN FUNCIONES USADAS
 
 ```cpp
 class Node;
 ```
-Clase que creará los nodos. De elemento al nodo se le pone un array de dos long long ya que se pretende guardar un rango de numero (Ej. 12-34). Luego están los punteros izquierda y derecha que servirán para apuntar a los siguientes elementos del árbol.
+Clase que creará los nodos. De elemento, al nodo se le pone un array de dos long long ya que se pretende guardar un rango de numero (Ej. 12-34). Luego están los punteros izquierda y derecha que servirán para apuntar a los siguientes elementos del árbol.
 
 ```cpp
 std::array<long long,2> range; 
