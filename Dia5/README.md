@@ -81,6 +81,22 @@ if(auxRange->range[0] <= aux->range[0] && auxRange->range[1] >= aux->range[1]) {
 }
 ```
 
+Gráficamente, el insert se vería algo así:
+
+```
+            [30-45] <= root
+                |                   [18-40] <= A insertar
+          |----------|
+        [20-32]    [40-57]
+```
+
+```
+            [30-45] <= root
+                |                   
+          |----------|
+        [18-40]    [40-57]
+```
+
 Para obtener el resultado del ejercicio se hace uso de una función booleana que mira si un id está dentro de un rango y devuelve true si está y false si no está.
 
 ```cpp
