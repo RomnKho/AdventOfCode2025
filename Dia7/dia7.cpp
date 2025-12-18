@@ -1,112 +1,151 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <unordered_set>
 #include <fstream>
 
 using namespace std;
 
-// Hash para pair<int,int>
-struct PairHash {
-    size_t operator()(const pair<int,int>& p) const {
-        //Guardamos la fila y columna en un número único para poder guardar la clave
-        //La razón por la que multiplicamos por 1000 es para que no haya ninguna colisión entre las claves
-        return p.first * 1000 + p.second; 
-    }
+// Una entrada simple para nuestra tabla
+struct Entrada {
+    int l, c;
+    bool ocupado = false; // Para saber si hay algo en esta celda
+};
+
+class TablaHash {
+    public:
+        int tam;
+        vector<Entrada> tabla;
+
+    public:
+        // Inicializamos con un tamaño un poco mayor al mapa para evitar que se llene
+        TablaHash(int n) : tam(n), tabla(n) {}
+
+        //Colocamos las posiciones dependiendo de la línea y la columna y la guardamos en un índice.
+        //Multiplicamos por 1000 las líneas para que no hayan colisiones, se podría multiplicar tanto 
+        //líneas como columnas o multiplicar por cualquier otro número mientras sea para ahorrar colisiones.
+        bool insert(int l, int c) {
+            int indice = ((unsigned long long)l * 1000 + c) % tam;
+
+            // Si el hueco está ocupado, buscamos el siguiente
+            while (tabla[indice].ocupado) {
+                // Si ya existe la posición, no podemos insertarla y tenemos que buscar otro hueco libre
+                if (tabla[indice].l == l && tabla[indice].c == c) return false;
+                
+                indice = (indice + 1) % tam; 
+            }
+
+            // Cuando encontramos un hueco libre guardamos su posición y la marcamos como ocupada.
+            tabla[indice].l = l;
+            tabla[indice].c = c;
+            tabla[indice].ocupado = true;
+            return true;
+        }
+
+        //Limpiamos el vector para poder reutilizar la tabla
+        void limpiar() {
+            for(int i = 0; i < tam; i++){
+                
+            tabla[i].ocupado = false;
+            }
+        }
 };
 
 
-// Función para leer el input desde archivo
-void LeerInput(const string& archivo, vector<string>& mapa) {
-    ifstream input(archivo);
 
-    if (!input) {
-        cerr << "Error: no se pudo abrir " << archivo << endl;
-        return;
-    }
-
-    string line;
-    while (getline(input, line)) {
-        mapa.push_back(line);
-    }
-}
-
-// Función que resuelve el problema
 long long contar_splits(const vector<string>& mapa) {
     if (mapa.empty()){
          return 0;
     }
-    //Establezco las dimensiones del mapa con las variables L(línea) y C(columna)
-
     int L = mapa.size();
     int C = mapa[0].size();
 
-    // Buscar la 'S' en la primera fila.
-   
     int columnaInicial = -1;
+    //Recorremos para encontrar donde esta la posición de la S para empezar a buscar splitters
     for (int c = 0; c < C; c++) {
-        if (mapa[0][c] == 'S') {
-            columnaInicial = c;
-            break;
+        if (mapa[0][c] == 'S') { 
+            columnaInicial = c; 
+            break; 
         }
     }
-    // En el caso de que no se encuentre la 'S' no se puede iniciar el programa.
-
-    if (columnaInicial == -1 || L == 1) {
+    //Si no encontramos la posición de S en la primera fila no podemos hacer el problema
+    if (columnaInicial == -1 || L == 1){ 
         return 0;
     }
-    // Conjunto de posiciones activas actualmente
-    unordered_set<pair<int,int>, PairHash> activas;
-    activas.insert({1, columnaInicial});
 
-    // Conjunto de splitters ya visitados
-    unordered_set<pair<int,int>, PairHash> splitters_visitados;
+    // Tamaño: el doble del área para que siempre haya huecos libres y sea rápido
+    int tam = (L * C * 2) ;
+
+    TablaHash activas(tam);
+    activas.insert(1, columnaInicial);
+
+    TablaHash splitters_visitados(tam);
     long long totalSplits = 0;
 
-    // Mientras haya posiciones activas
-    while (!activas.empty()) {
-        unordered_set<pair<int,int>, PairHash> next;
+    while (true) {
+        TablaHash next(tam);
+        bool nuevasEncontradas = false;
 
-        // Convertimos activas a vector para recorrer con índice
-        vector<pair<int,int>> activas_vec(activas.begin(), activas.end());
+        
+       // Recorremos toda la tabla hash de posiciones actuales
+    for (int i = 0; i < activas.tam; i++) {
+        // Si la celda de la tabla está vacía, saltamos a la siguiente
+        if (!activas.tabla[i].ocupado) {
+        continue;
+    }
 
-        for (size_t i = 0; i < activas_vec.size(); i++) {
-            pair<int,int> pos = activas_vec[i];
-            int l = pos.first;
-            int c = pos.second;
+        // Extraemos la posición actual para trabajar mejor
+        int filaActual = activas.tabla[i].l;
+        int colActual  = activas.tabla[i].c;
 
-            if (l >= L) continue; // nos salimos del mapa
+        // Si la fila está fuera de los límites del mapa, la ignoramos
+        if (filaActual >= L) {
+        continue;
+    }
 
-            char celda = mapa[l][c];
+        char celda = mapa[filaActual][colActual];
 
-            if (celda == '.') {
-                // Avanzar recto
-                if (l + 1 < L)
-                    next.insert({l + 1, c});
+        // CASO 1: Es un camino libre (.)
+        if (celda == '.') {
+        // Simplemente intentamos avanzar a la fila de abajo
+            if (filaActual + 1 < L) {
+                if (next.insert(filaActual + 1, colActual)) {
+                   nuevasEncontradas = true;
             }
-            else if (celda == '^') {
-                // Solo contar si no lo hemos visitado antes
-                if (!splitters_visitados.count({l, c})) {
-                    splitters_visitados.insert({l, c});
-                    totalSplits++;
+        }
+    } 
+    
+     // CASO 2: Es un divisor (^)
+        else if (celda == '^') {
+            // Insertamos el splitter como visitado y aumentamos el total de splits.
+            // Si 'insert' devuelve true, significa que es la primera vez que lo vemos.
+            if (splitters_visitados.insert(filaActual, colActual)) {
+                totalSplits++;
 
-                    int nl = l + 1;
-                    if (nl < L) {
-                        if (c - 1 >= 0){
-                            // diagonal izquierdo
-                            next.insert({nl, c - 1});
-                        } 
-                        if (c + 1 < C){
-                            // diagonal derecho
-                            next.insert({nl, c + 1});
-                         } 
+               // Calculamos las dos nuevas direcciones y comprobamos que no nos hayamos salido del mapa.
+              int filaSiguiente = filaActual + 1;
+              if (filaSiguiente < L) {
+                // Diagonal Izquierda
+                if (colActual - 1 >= 0) {
+                    if (next.insert(filaSiguiente, colActual - 1)) {
+                        nuevasEncontradas = true;
+                    }
+                }
+                // Diagonal Derecha
+                if (colActual + 1 < C) {
+                    if (next.insert(filaSiguiente, colActual + 1)) {
+                        nuevasEncontradas = true;
                     }
                 }
             }
         }
-
-        // Avanzamos al siguiente paso
-        activas = move(next);
+    }
+}
+        if (!nuevasEncontradas){ 
+            break;
+        }
+        
+        // Simplemente intercambiamos las tablas
+        activas = next; 
     }
 
     return totalSplits;
@@ -114,19 +153,11 @@ long long contar_splits(const vector<string>& mapa) {
 
 int main() {
     vector<string> mapa;
+    ifstream input("input.txt");
+    string line;
+    while (getline(input, line)) mapa.push_back(line);
 
-    // Leer archivo
-    LeerInput("input.txt", mapa);
-
-    // Llamamos al error en caso de que el mapa esté vacío
-    if (mapa.empty()) {
-        cerr << "El archivo está vacío o no se pudo leer.\n";
-        return 1;
-    }
-
-    // Cargamos el resultado de la función para luego sacarlo en pantalla.
-    long long resultado = contar_splits(mapa);
-
-    cout << "Resultado: " << resultado << endl;
+    if (mapa.empty()) return 1;
+    cout << "Resultado: " << contar_splits(mapa) << endl;
     return 0;
 }

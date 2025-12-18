@@ -1,21 +1,49 @@
 ## DÍA 7
 
 ### TABLAS HASH
-- Se ha abordado el ejercicio con tablas hash ya que se habia visto que guardando las coordenadas anteriores a un split se podia facilmente colocar el split dividido donde debe
-- Es la primera alternativa que se escogió
-- Se ha aprendido a usar estructuras como std::unordered_set e implementar la tabla hash
+- Hemos elegido este ejercicio ya que entre todas las posibilidades, este es el que vimos más claro para implementar una tabla hash.
+- Se ha abordado el ejercicio con tablas hash ya que se habia visto que guardando las coordenadas anteriores a un split se podia facilmente colocar el split dividido donde debe.
+- Es la primera alternativa que se escogió.
+- Se ha aprendido a implementar de 0 una tabla hash además de implementar sus propios métodos.
 
 ### EXPLICACIÓN FUNCIONES USADAS
 
 ```cpp
-struct PairHash {};
+struct Entrada {
+    int l, c;
+    bool ocupado = false;
+};
 ```
 
-Estructura para crear la tabla hash
+Estructura que irá como elemento de la hash. 'Entrada' contiene a:
+- l: linea
+- c: columna
+- ocupado: booleano que mira si hay algo en la celda
 
 ```cpp
-size_t operator()(const pair<int,int>& p) const;
+class TablaHash; 
 ```
+
+Clase que añade la tabla hash como tal. Esta tendrá los siguientes atributos:
+
+```cpp
+int tam;
+vector<Entrada> tabla;
+```
+
+La explicación es la siguiente:
+- tam: tamaño de la tabla hash
+- tabla: vector de entrada que irá almacenando todas las coordenadas de los splits
+
+Dentro de la clase se implementan diferentes métodos como el constructor.
+
+```cpp
+TablaHash(int n) : tam(n), tabla(n) {}
+```
+
+Luego, se ha añadido el método de inserción
+
+
 
 Función que devuelve la clave de la hash a partir de los integers que se proporciona en el par. Ejemplo: pair<2, 19> saldria 2019 como clave.
 
