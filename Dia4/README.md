@@ -1,9 +1,10 @@
 ## DÍA 4
 
 ### GRAFOS
+- Hemos elegido este problema ya que al ver lo que se necesitaba, hemos pensado que se podría integrar con grafos ya que simplemente haciamos las conexiones necesarias para decidir que casillas son las correctas.
 - Observando este problema hemos visto que se podia afrontar tanto con grafos como con tablas hash, sin embargo hemos decidido resolverlo con grafos, ya que la solucion era mas sencilla.
-  
-- Se ha aprendido a utilizar funciones como assign() o push_back() y se han solidificado los conocimientos sobre grafos
+- Se ha necesitado crear la estructura desde 0 para poder controlarla de manera más precisa.
+- Se ha aprendido a utilizar funciones como assign() o push_back() y se han solidificado los conocimientos sobre grafos.
 
 ### EXPLICACIÓN CLASE Y ATRIBUTOS
 
