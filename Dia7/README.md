@@ -46,7 +46,7 @@ Luego, se ha añadido el método de inserción.
 ```cpp
 bool insert(int l, int c);
 ```
-En el se creará la clave de la hash a partir de los integers que se proporciona en la cabecera. Ejemplo: hash.insert(2,19) tendría 2019 como clave.
+En el se creará la clave de la hash a partir de los integers que se proporciona en la cabecera. Ejemplo: hash.insert(2,19) tendría 2019 como clave si tuviera 3000 de tamaño.
 
 ```cpp
 int indice = ((unsigned long long)l * 1000 + c) % tam;
