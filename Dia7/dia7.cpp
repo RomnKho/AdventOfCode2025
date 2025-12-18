@@ -73,7 +73,7 @@ long long contar_splits(const vector<string>& mapa) {
     }
 
     // Tamaño: el doble del área para que siempre haya huecos libres y sea rápido
-    int tam = (L * C * 2) ;
+    int tam = (L * C * 2);
 
     TablaHash activas(tam);
     activas.insert(1, columnaInicial);
@@ -87,59 +87,58 @@ long long contar_splits(const vector<string>& mapa) {
 
         
        // Recorremos toda la tabla hash de posiciones actuales
-    for (int i = 0; i < activas.tam; i++) {
-        // Si la celda de la tabla está vacía, saltamos a la siguiente
-        if (!activas.tabla[i].ocupado) {
-        continue;
-    }
-
-        // Extraemos la posición actual para trabajar mejor
-        int filaActual = activas.tabla[i].l;
-        int colActual  = activas.tabla[i].c;
-
-        // Si la fila está fuera de los límites del mapa, la ignoramos
-        if (filaActual >= L) {
-        continue;
-    }
-
-        char celda = mapa[filaActual][colActual];
-
-        // CASO 1: Es un camino libre (.)
-        if (celda == '.') {
-        // Simplemente intentamos avanzar a la fila de abajo
-            if (filaActual + 1 < L) {
-                if (next.insert(filaActual + 1, colActual)) {
-                   nuevasEncontradas = true;
+        for (int i = 0; i < activas.tam; i++) {
+            // Si la celda de la tabla está vacía, saltamos a la siguiente
+            if (!activas.tabla[i].ocupado) {
+                continue;
             }
-        }
-    } 
+
+            // Extraemos la posición actual para trabajar mejor
+            int filaActual = activas.tabla[i].l;
+            int colActual  = activas.tabla[i].c;
+
+            // Si la fila está fuera de los límites del mapa, la ignoramos
+            if (filaActual >= L) {
+                continue;
+            }
+
+            char celda = mapa[filaActual][colActual];
+
+            // CASO 1: Es un camino libre (.)
+            if (celda == '.') {
+            // Simplemente intentamos avanzar a la fila de abajo
+                if (filaActual + 1 < L) {
+                    if (next.insert(filaActual + 1, colActual)) {
+                    nuevasEncontradas = true;
+                    }
+                }
+            } 
     
-     // CASO 2: Es un divisor (^)
-        else if (celda == '^') {
-            // Insertamos el splitter como visitado y aumentamos el total de splits.
-            // Si 'insert' devuelve true, significa que es la primera vez que lo vemos.
-            if (splitters_visitados.insert(filaActual, colActual)) {
-                totalSplits++;
-
-               // Calculamos las dos nuevas direcciones y comprobamos que no nos hayamos salido del mapa.
-              int filaSiguiente = filaActual + 1;
-              if (filaSiguiente < L) {
-                // Diagonal Izquierda
-                if (colActual - 1 >= 0) {
-                    if (next.insert(filaSiguiente, colActual - 1)) {
-                        nuevasEncontradas = true;
-                    }
-                }
-                // Diagonal Derecha
-                if (colActual + 1 < C) {
-                    if (next.insert(filaSiguiente, colActual + 1)) {
-                        nuevasEncontradas = true;
-                    }
+            // CASO 2: Es un divisor (^)
+            else if (celda == '^') {
+                // Insertamos el splitter como visitado y aumentamos el total de splits.
+                // Si 'insert' devuelve true, significa que es la primera vez que lo vemos.
+                if (splitters_visitados.insert(filaActual, colActual)) {
+                    totalSplits++;
+                    // Calculamos las dos nuevas direcciones y comprobamos que no nos hayamos salido del mapa.
+                    int filaSiguiente = filaActual + 1;
+                    if (filaSiguiente < L) {
+                        // Diagonal Izquierda
+                        if (colActual - 1 >= 0) {
+                            if (next.insert(filaSiguiente, colActual - 1)) {
+                                nuevasEncontradas = true;
+                            }
+                        }
+                        // Diagonal Derecha
+                        if (colActual + 1 < C) {
+                            if (next.insert(filaSiguiente, colActual + 1)) {
+                                nuevasEncontradas = true;
+                            }
+                        }
+                    }   
                 }
             }
         }
-    }
-}
         if (!nuevasEncontradas){ 
             break;
         }

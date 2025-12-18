@@ -41,24 +41,57 @@ Dentro de la clase se implementan diferentes métodos como el constructor.
 TablaHash(int n) : tam(n), tabla(n) {}
 ```
 
-Luego, se ha añadido el método de inserción
-
-
-
-Función que devuelve la clave de la hash a partir de los integers que se proporciona en el par. Ejemplo: pair<2, 19> saldria 2019 como clave.
+Luego, se ha añadido el método de inserción.
 
 ```cpp
-void LeerInput(const string& archivo, vector<string>& mapa);
+bool insert(int l, int c);
+```
+En el se creará la clave de la hash a partir de los integers que se proporciona en la cabecera. Ejemplo: hash.insert(2,19) tendría 2019 como clave.
+
+```cpp
+int indice = ((unsigned long long)l * 1000 + c) % tam;
 ```
 
-Función que lee el archivo de texto que se le porporciona y coloca la información en un vector de strings
+Si por alguna casualidad, dos entradas tuvieran la misma clave se intentará recolocar la entrada a insertar en otra cubeta. Además, mira si una posición ya se ha insertado antes.
+
+```cpp
+while (tabla[indice].ocupado) {
+
+    if (tabla[indice].l == l && tabla[indice].c == c) return false;
+    
+    indice = (indice + 1) % tam; 
+}
+
+tabla[indice].l = l;
+tabla[indice].c = c;
+tabla[indice].ocupado = true;
+```
+
+La función devolverá `true` si se ha realizado con éxito la inserción o `false` si no se ha podido hacer.
+
+Como última método de la clase se ha añadido una función que limpia la tabla hash para que pueda ser reutilizada.
+
+```cpp
+void limpiar() {
+    for(int i = 0; i < tam; i++){
+        
+    tabla[i].ocupado = false;
+    }
+}
+```
+
+Por último se implementa la siguiente función que resuelve el problema:
 
 ```cpp
 long long contar_splits(const vector<string>& mapa);
 ```
 
-Función que cuenta los splits totales en la última fila. Primero se encuentra la S ("la estrella del arbol") que determina la columna inicial donde van a iniciar los splits. En el caso de que no se encuentre la S la función retornará 0 significando que no se pudo iniciar el conteo de splits.
+Esta es una función que cuenta los splits totales en la última fila. Primero se determina el tamaño del tablero que se da en el input. Luego se encuentra la S ("la estrella del arbol") que determina la columna inicial donde van a iniciar los splits. En el caso de que no se encuentre la S la función retornará 0 significando que no se pudo iniciar el conteo de splits.
+
 ```cpp
+int L = mapa.size();
+int C = mapa[0].size();
+
 int columnaInicial = -1;
 
     for (int c = 0; c < C; c++) {
@@ -72,25 +105,36 @@ int columnaInicial = -1;
         return 0;
     }
 ```
-Luego se crea un mapa hash con las posiciones en donde irán todas las posiciones posteriores a un split 
+
+Luego se crea un mapa hash con las posiciones en donde irán todas las posiciones posteriores a un split. Se cre con el doble de tamaño del tablero para que siempre hayan huecos libres.
+
 ```cpp 
-unordered_set<pair<int,int>, PairHash> activas;
+int tam = (L * C * 2);
+TablaHash activas(tam);
 ```
+
 Ejemplo de lo que se guardaría en activas:
+
 ```
 ......S.......
 ......|.......
 .....|^|......   <= Guarda las posiciones de |
 ```
-y otro map que guardará las posiciones de splitters ya visitados. Para poder diferenciar el hecho de que en una misma línea pueden haber más de un un split.
+
+y otro mapa que guardará las posiciones de splitters ya visitados. Para poder diferenciar el hecho de que en una misma línea pueden haber más de un un split.
+
 ```cpp
-unordered_set<pair<int,int>, PairHash> splitters_visitados;
+TablaHash splitters_visitados(tam);
 ```
+
 Así, luego se crea un bucle que va a ir recorriendo el mapa. Aquí se crea un auxiliar llamado next.
+
 ```cpp
-unordered_set<pair<int,int>, PairHash> next;
+TablaHash next(tam);
 ```
+
 que servirá para colocar los splits siguientes a activos, es decir,
+
 ```
 ......S.......
 ......|.......
@@ -102,37 +146,49 @@ Dentro de este, se decide si hay que pasar a la siguiente linea dividiendo el sp
 
 Pasa sin dividirse:
 ```cpp
+// CASO 1: Es un camino libre (.)
 if (celda == '.') {
-        if (l + 1 < L)
-            next.insert({l + 1, c});
+// Simplemente intentamos avanzar a la fila de abajo
+    if (filaActual + 1 < L) {
+        if (next.insert(filaActual + 1, colActual)) {
+        nuevasEncontradas = true;
+        }
     }
+}
 ```
 
 Pasa dividiendose:
 ```cpp
+// CASO 2: Es un divisor (^)
 else if (celda == '^') {
-    
-    if (!splitters_visitados.count({l, c})) {
-        splitters_visitados.insert({l, c});
+    // Insertamos el splitter como visitado y aumentamos el total de splits.
+    // Si 'insert' devuelve true, significa que es la primera vez que lo vemos.
+    if (splitters_visitados.insert(filaActual, colActual)) {
         totalSplits++;
-
-        int nl = l + 1;
-        if (nl < L) {
-            if (c - 1 >= 0){
-                next.insert({nl, c - 1});
-            } 
-            if (c + 1 < C){
-                next.insert({nl, c + 1});
+        // Calculamos las dos nuevas direcciones y comprobamos que no nos hayamos salido del mapa.
+        int filaSiguiente = filaActual + 1;
+        if (filaSiguiente < L) {
+            // Diagonal Izquierda
+            if (colActual - 1 >= 0) {
+                if (next.insert(filaSiguiente, colActual - 1)) {
+                    nuevasEncontradas = true;
                 }
-        }
+            }
+            // Diagonal Derecha
+            if (colActual + 1 < C) {
+                if (next.insert(filaSiguiente, colActual + 1)) {
+                    nuevasEncontradas = true;
+                }
+            }
+        }   
     }
-} 
+}
 ```
 
 Ya para finalizar activas pasa a ser next y se vuelve a realizar el bucle hasta que se haya llegado a la ultima linea:
 
 ```cpp
-if (l >= L) continue;
+if (filaActual >= L) continue;
 ```
 
 Devuelve el numero de splits en la última fila
