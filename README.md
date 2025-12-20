@@ -7,6 +7,7 @@
 - Román Khomenko Khomenko
 - David Pérez Simón
 - Alejandro Baños Hernández
+- Zaid Alilou Bouzid
 
 #### Días a entregar:
 - [Día 4](Dia4) => Grafos
